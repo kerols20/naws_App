@@ -58,4 +58,32 @@ extension ContextExtensions on BuildContext {
     );
   }
 }
+extension PaddingExtensions on Widget {
+  Widget withPadding([double padding = 8.0]) {
+    return Padding(
+      padding: EdgeInsets.all(padding),
+      child: this,
+    );
+  }
+
+  Widget withSymmetricPadding({double horizontal = 8.0, double vertical = 8.0}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
+      child: this,
+    );
+  }
+
+  Widget withOnlyPadding({
+    double left = 0.0,
+    double top = 0.0,
+    double right = 0.0,
+    double bottom = 0.0,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(left: left, top: top, right: right, bottom: bottom),
+      child: this,
+    );
+  }
+}
+
 
