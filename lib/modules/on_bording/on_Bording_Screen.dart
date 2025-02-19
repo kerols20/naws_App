@@ -20,9 +20,6 @@ class _on_BordingState extends State<on_Bording> {
     var provider = Provider.of<Home_viwe>(context);
     var theme = Theme.of(context);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Api_network.gatAllSouces("sports");
-      },),
       drawer: my_Drawer(),
       appBar: AppBar(
         title: Text( provider.salecteditem == null? "Categories": provider.salecteditem!.catgoryname),

@@ -4,7 +4,6 @@ import 'package:naws_app/main.dart';
 
 class SplachScreen extends StatefulWidget {
    SplachScreen({super.key});
-
   @override
   State<SplachScreen> createState() => _SplachScreenState();
 }
@@ -13,14 +12,13 @@ class _SplachScreenState extends State<SplachScreen> {
   @override
   void initState(){
     super.initState();
-    Future.delayed(Duration(seconds: 6),() {
+    Future.delayed(Duration(seconds: 5),() {
       navigatorKey.currentState?.pushNamedAndRemoveUntil("/onboarding_view", (route) => false);
     },);
   }
-   Duration _duration = Duration(seconds: 5);
+   Duration _duration = Duration(seconds: 4);
   @override
   Widget build(BuildContext context) {
-
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
