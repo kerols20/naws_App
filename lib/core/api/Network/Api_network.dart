@@ -23,7 +23,7 @@ abstract class Api_network{
      sourcesModel sourcesModelresponse =  sourcesModel.fromJson(response);
      /// return the item i needed from the sources
      return sourcesModelresponse.sources;
-      log(data.body);
+
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -45,7 +45,6 @@ abstract class Api_network{
      ArticleModel ArticleModelresponse =  ArticleModel.fromHason(response);
      /// return the item i needed from the sources
      return ArticleModelresponse.articles;
-     log(data.body);
    } catch (e) {
      throw Exception(e.toString());
    }

@@ -29,7 +29,10 @@ class my_Drawer extends StatelessWidget {
           ),
           SizedBox(height: 20,),
           GestureDetector(
-            onTap: provider.goHome,
+            onTap:() {
+              Navigator.pop(context);
+              provider.goHome();
+            } ,
             child: Row(
               children: [
                 Icon(Icons.home, color: Colors.white, size: 35,),

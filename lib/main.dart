@@ -3,20 +3,27 @@ import 'package:naws_app/core/routes/pageRouts.dart';
 import 'package:naws_app/core/routes/routs.dart';
 import 'package:naws_app/modules/home_viwe/Home_viwe_Model.dart';
 import 'package:provider/provider.dart';
-GlobalKey <NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-///متى تحتاج إلى GlobalKey<NavigatorState>؟
-// عند استخدام إدارة الحالة مثل Provider أو Bloc، حيث لا يمكن الوصول إلى context بسهولة.
-// للتنقل من أماكن خارج شجرة الودجتس، مثل background notifications أو services.
-// لإغلاق جميع الشاشات وفتح شاشة جديدة (مثلاً عند تسجيل الخروج من التطبيق).
- // navigatorKey.currentState?.pushNamed(PagesRouteName.onboarding); example
+import 'package:timeago/timeago.dart' as timeago;
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
-  /// add provider on myApp and call function Home_viwe to provider
-  /// here he create A SingletonClass for Home_viwe
-  runApp( ChangeNotifierProvider(create: (context) => Home_viwe(), child: MyApp()));
+  initTimeAgo();
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => Home_viwe(),
+      child: MyApp(),
+    ),
+  );
+}
+
+void initTimeAgo() {
+  timeago.setLocaleMessages('short', ShortTimeMessages());
 }
 
 class MyApp extends StatelessWidget {
-   MyApp({super.key});
+  MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,4 +33,23 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
     );
   }
+}
+
+class ShortTimeMessages implements timeago.LookupMessages {
+  @override String prefixAgo() => '';
+  @override String prefixFromNow() => '';
+  @override String suffixAgo() => '';
+  @override String suffixFromNow() => '';
+  @override String lessThanOneMinute(int seconds) => '1m';
+  @override String aboutAMinute(int minutes) => '1m';
+  @override String minutes(int minutes) => '${minutes}m';
+  @override String aboutAnHour(int minutes) => '1h';
+  @override String hours(int hours) => '${hours}h';
+  @override String aDay(int hours) => '1d';
+  @override String days(int days) => '${days}d';
+  @override String aboutAMonth(int days) => '1mo';
+  @override String months(int months) => '${months}mo';
+  @override String aboutAYear(int year) => '1y';
+  @override String years(int years) => '${years}y';
+  @override String wordSeparator() => ' ';
 }
