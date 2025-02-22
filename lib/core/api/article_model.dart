@@ -14,7 +14,6 @@ class ArticleModel {
               .toList()
       );
 }
-
 class Article {
   final String id;
   final String name;

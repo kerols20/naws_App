@@ -24,7 +24,9 @@ class _on_BordingState extends State<on_Bording> {
       appBar: AppBar(
         title: Text( provider.salecteditem == null? "Categories": provider.salecteditem!.catgoryname),
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.search))
+          IconButton(onPressed: (){
+            Navigator.pushNamed(context, "search_screen");
+          }, icon: Icon(Icons.search))
         ],
         centerTitle: true,
       ),

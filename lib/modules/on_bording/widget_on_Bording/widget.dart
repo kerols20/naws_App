@@ -7,7 +7,7 @@ import 'package:naws_app/modules/home_viwe/Home_viwe_Model.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
+import 'package:url_launcher/url_launcher.dart';
 class categroy_Home_Viwe extends StatelessWidget {
   final void Function(catgory_widget) onTap;
    categroy_Home_Viwe({super.key , required this.onTap});
@@ -119,86 +119,170 @@ class _slecated_Home_category_viweState extends State<slecated_Home_category_viw
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        DefaultTabController(
-          length: catgory.sourcesList.length,
-          child: TabBar(
-            onTap: catgory.satSelctedsourse,
-            padding: EdgeInsets.zero,
-            isScrollable: true,
-            tabs: catgory.sourcesList.map((e) => Text(e.name)).toList(),
-          ),
-        ),
-        Expanded(
-          child: Skeletonizer(
-            enabled: catgory.articlesList.isEmpty,
-            child: ListView.separated(itemBuilder: (context, index) => Container(
-              width: 360,
-              height: 320,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black
-                ),
-                borderRadius: BorderRadius.circular(15)
-              ),
-              child: CachedNetworkImage(
-                imageUrl: catgory.articlesList[index].urlToImage,
-                imageBuilder: (context, imageProvider) =>
-                Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // محاذاة النصوص لليسار
-                children: [
-                ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Container(
-                height: 200, // تحديد ارتفاع مناسب للصورة
-                width: double.infinity,
-                decoration: BoxDecoration(
-                image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),),),),),
-                SizedBox(height: 10),
-                Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                catgory.articlesList[index].title,
-                style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,),),
-                SizedBox(height: 10),
-                Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                Expanded(
-                child: Text(
-                catgory.articlesList[index].author,
-                style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[700],
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,),),
-                Text(
-                  timeago.format(DateTime.parse(catgory.articlesList[index].publishedAt), locale: 'short'),
-                style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[500],),),],),),],),
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              ),
+        children: [
+          DefaultTabController(
+            length: catgory.sourcesList.length,
+            child: TabBar(
+              onTap: catgory.satSelctedsourse,
+              padding: EdgeInsets.zero,
+              isScrollable: true,
+              tabs: catgory.sourcesList.map((e) => Text(e.name)).toList(),
             ),
-                separatorBuilder: (context, index) => SizedBox(height: 10,), itemCount: catgory.articlesList.length).withPadding(5),
           ),
-        )
-      ],
+          Expanded(
+            child: Skeletonizer(
+              enabled: catgory.articlesList.isEmpty,
+              child: ListView.separated(
+                itemBuilder: (context, index) => InkWell(
+                  borderRadius: BorderRadius.circular(15),
+                  onTap: () {
+                    _showArticalDatilesBottomSheet(context, catgory.articlesList[index]);
+                  },
+                  child: Container(
+                    width: 360,
+                    height: 320,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: catgory.articlesList[index].urlToImage,
+                      imageBuilder: (context, imageProvider) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // محاذاة النصوص لليسار
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Container(
+                              height: 200, // تحديد ارتفاع مناسب للصورة
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.black.withOpacity(0.3),
+                                    BlendMode.darken,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              catgory.articlesList[index].title,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    catgory.articlesList[index].author,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[700],
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Text(
+                                  timeago.format(
+                                    DateTime.parse(catgory.articlesList[index].publishedAt),
+                                    locale: 'short',
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                  ),
+                ),
+                separatorBuilder: (context, index) => SizedBox(height: 10),
+                itemCount: catgory.articlesList.length,
+              ).withPadding(5),
+            ),
+          ),
+
+        ],
     );
   }
+  void _showArticalDatilesBottomSheet(BuildContext context, Article article) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // حتى لا يشغل كل الشاشة
+          children: [
+            // صورة المقال
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: CachedNetworkImage(
+                imageUrl: article.urlToImage ?? "", // التأكد من عدم تمرير null
+                height: 200, // ارتفاع الصورة
+                width: double.infinity,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error, size: 50),
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              article.description ?? "No description available", // تجنب null
+              style: TextStyle(fontSize: 16, color: Colors.black87),
+              textAlign: TextAlign.justify, // محاذاة النص
+            ),
+            FilledButton(onPressed: () {
+              launchUrl( Uri.parse(article.url) ,mode: LaunchMode.inAppBrowserView);
+
+              // canLaunchUrl(Uri(scheme: 'tel', path: '123'));
+              // launchUrl(Uri(scheme: 'tel', path: '123'));
+            }, style: FilledButton.styleFrom(
+              padding: EdgeInsets.all(16),
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("viwe fill Article"),
+                  ],
+                ))
+          ],
+        ),
+      ),
+    );
+  }
+
 }
 

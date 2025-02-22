@@ -49,4 +49,24 @@ abstract class Api_network{
      throw Exception(e.toString());
    }
  }
+ static Future<List<Article>> getAllSearch(String search, int pageNumber) async {
+   try {
+     var queryParameters = {
+       'apiKey': constant.ApiKey,
+       'q': search,
+       'page': pageNumber.toString(),
+     };
+     var url = Uri.https(constant.baseUrl, constant.evarything, queryParameters);
+
+     var response = await http.get(url);
+     log(response.body);
+
+     Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+     ArticleModel articleModelResponse = ArticleModel.fromHason(jsonResponse);
+
+     return articleModelResponse.articles;
+   } catch (e) {
+     throw Exception("Error searching articles: ${e.toString()}");
+   }
+ }
 }
